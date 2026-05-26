@@ -1,4 +1,4 @@
-<#
+﻿<#
 Generic VPS first-bootstrap script for Windows PowerShell.
 
 What it does:
@@ -715,10 +715,11 @@ chmod 600 /root/.ssh/authorized_keys
     Write-Ok "Public key added to /root/.ssh/authorized_keys."
 
     Write-Title "Configuring SSH daemon"
+    $bkSuffix = Get-Date -Format "yyyyMMddHHmmss"
     $sshdSetup = @"
 set -e
 mkdir -p /etc/ssh/sshd_config.d
-cp -a /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.generic.4(date +%Y%m%d%H%M%S)
+cp -a /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$bkSuffix
 if ! grep -qE '^\s*Include\s+/etc/ssh/sshd_config\.d/\*\.conf' /etc/ssh/sshd_config; then
   printf '\nInclude /etc/ssh/sshd_config.d/*.conf\n' >> /etc/ssh/sshd_config
 fi
