@@ -116,6 +116,7 @@ function Invoke-Remote {
         [string]$Command,
         [int]$TimeoutSec = 600
     )
+    $Command = $Command -replace "`r`n", "`n" -replace "`r", "`n"
     $result = Invoke-SSHCommand -SSHSession $Session -Command $Command -TimeOut $TimeoutSec
     if ($result.ExitStatus -ne 0) {
         Write-Fail "Remote command failed with exit status $($result.ExitStatus)."
