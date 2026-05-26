@@ -300,7 +300,7 @@ function Invoke-KeyRotation {
     $emptyCred = New-Object System.Management.Automation.PSCredential("root", (New-Object System.Security.SecureString))
     $sess = $null
     try {
-        $sess = New-SSHSession -ComputerName $ip -Port $port -Credential $emptyCred -KeyFile $oldKey -AcceptKey -ConnectionTimeout 20
+        $sess = New-SSHSession -ComputerName $ip -Port $port -Credential $emptyCred -KeyFile $oldKey -AcceptKey -ConnectionTimeout 20 -KeepAliveInterval 30
     } catch {
         Write-Fail "Cannot connect to $alias (${ip}:${port}) — skipping."
         return $false
@@ -358,7 +358,7 @@ function Invoke-PortChange {
     $emptyCred = New-Object System.Management.Automation.PSCredential("root", (New-Object System.Security.SecureString))
     $sess = $null
     try {
-        $sess = New-SSHSession -ComputerName $ip -Port $curPort -Credential $emptyCred -KeyFile $keyFile -AcceptKey -ConnectionTimeout 20
+        $sess = New-SSHSession -ComputerName $ip -Port $curPort -Credential $emptyCred -KeyFile $keyFile -AcceptKey -ConnectionTimeout 20 -KeepAliveInterval 30
     } catch {
         Write-Fail "Cannot connect to $alias (${ip}:${curPort}) — skipping."
         return $false
@@ -403,7 +403,7 @@ systemctl restart ssh || systemctl restart sshd
 
     $sess2 = $null
     try {
-        $sess2 = New-SSHSession -ComputerName $ip -Port $NewPort -Credential $emptyCred -KeyFile $keyFile -AcceptKey -ConnectionTimeout 20
+        $sess2 = New-SSHSession -ComputerName $ip -Port $NewPort -Credential $emptyCred -KeyFile $keyFile -AcceptKey -ConnectionTimeout 20 -KeepAliveInterval 30
         $closeOldPort = @"
 set -e
 cat > /etc/ssh/sshd_config.d/99-custom-login.conf <<'EOF'
@@ -455,7 +455,7 @@ function Invoke-AddDeviceKey {
     $emptyCred = New-Object System.Management.Automation.PSCredential("root", (New-Object System.Security.SecureString))
     $sess = $null
     try {
-        $sess = New-SSHSession -ComputerName $ip -Port $port -Credential $emptyCred -KeyFile $keyFile -AcceptKey -ConnectionTimeout 20
+        $sess = New-SSHSession -ComputerName $ip -Port $port -Credential $emptyCred -KeyFile $keyFile -AcceptKey -ConnectionTimeout 20 -KeepAliveInterval 30
     } catch {
         Write-Fail "Cannot connect to $alias (${ip}:${port}) — skipping."
         return $false
@@ -613,7 +613,7 @@ try {
 
     Write-Title "Connecting to VPS as root on port 22"
     $cred = New-Object System.Management.Automation.PSCredential("root", $securePassword)
-    $session = New-SSHSession -ComputerName $vpsIp -Port 22 -Credential $cred -AcceptKey -ConnectionTimeout 20
+    $session = New-SSHSession -ComputerName $vpsIp -Port 22 -Credential $cred -AcceptKey -ConnectionTimeout 20 -KeepAliveInterval 30
     Write-Ok "Connected to $vpsIp."
 
     Write-Title "Detecting OS"
